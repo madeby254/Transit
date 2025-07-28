@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Washington State Transit Assault Analysis: A Decade of Challenges
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['Crimson Text', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              'slate-custom': '#475569',
+              'beige-custom': '#f5f3f0',
+              charcoal: '#2d3748',
+              'warm-white': '#fefefe',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .hero-overlay {
+        background: linear-gradient(
+          135deg,
+          rgba(71, 85, 105, 0.9) 0%,
+          rgba(45, 55, 72, 0.8) 100%
+        );
+      }
+      .bento-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 1.5rem;
+        height: 60vh;
+      }
+      .bento-main {
+        grid-row: 1 / 3;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem;
+      }
+      .bento-stat {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        background: rgba(245, 243, 240, 0.9);
+        border: 1px solid #e2e8f0;
+      }
+      .toc-fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+        background: #fefefe;
+        border-right: 1px solid #e2e8f0;
+        overflow-y: auto;
+        z-index: 50;
+        padding: 2rem 1.5rem;
+      }
+      .main-content {
+        margin-left: 280px;
+        min-height: 100vh;
+      }
+      .citation-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+      }
+      .citation-link:hover {
+        border-bottom-color: #3b82f6;
+      }
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          #e2e8f0,
+          transparent
+        );
+        margin: 4rem 0;
+      }
+      .pull-quote {
+        border-left: 4px solid #475569;
+        padding-left: 2rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: #64748b;
+      }
+      /* Mermaid chart styling */
+      .mermaid-container {
+        display: flex;
+        justify-content: center;
+        min-height: 300px;
+        max-height: 800px;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mermaid-container .mermaid {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        cursor: grab;
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .mermaid-container .mermaid svg {
+        max-width: 100%;
+        height: 100%;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .mermaid-container .mermaid:active {
+        cursor: grabbing;
+      }
+
+      .mermaid-container.zoomed .mermaid {
+        height: 100%;
+        width: 100%;
+        cursor: grab;
+      }
+
+      .mermaid-controls {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 10px;
+        z-index: 20;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .mermaid-control-btn {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #374151;
+        font-size: 14px;
+        min-width: 36px;
+        height: 36px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mermaid-control-btn:hover {
+        background: #f8fafc;
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: translateY(-1px);
+      }
+
+      .mermaid-control-btn:active {
+        transform: scale(0.95);
+      }
+      @media (max-width: 1024px) {
+        .toc-fixed {
+          transform: translateX(-100%);
+          transition: transform 0.3s ease;
+        }
+        .toc-fixed.open {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+        }
+        .bento-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto auto;
+          height: auto;
+        }
+        .bento-main {
+          grid-row: 1;
+          height: 40vh;
+        }
+        .mermaid-control-btn:not(.reset-zoom) {
+          display: none;
+        }
+        .mermaid-controls {
+          top: auto;
+          bottom: 15px;
+          right: 15px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          overflow-x: hidden;
+        }
+        .bento-main .text-center h1 {
+          font-size: 2.5rem;
+        }
+        .bento-main .text-center p {
+          font-size: 1rem;
+        }
+        .bento-main {
+          height: auto;
+          min-height: 30vh;
+        }
+        .bento-grid {
+          gap: 1rem;
+        }
+        .bento-stat {
+          padding: 1rem;
+        }
+        .bento-stat .text-3xl {
+          font-size: 1.5rem;
+        }
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-warm-white text-charcoal font-sans leading-relaxed">
+    <!-- Table of Contents -->
+    <nav class="toc-fixed">
+      <div class="mb-8">
+        <h3 class="font-serif text-lg font-semibold text-charcoal mb-4">
+          Contents
+        </h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a
+              href="#hero"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Introduction</a
+            >
+          </li>
+          <li>
+            <a
+              href="#executive-summary"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Executive Summary</a
+            >
+          </li>
+          <li>
+            <a
+              href="#data-challenges"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Data Availability Challenges</a
+            >
+          </li>
+          <li>
+            <a
+              href="#sound-transit"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Sound Transit Analysis</a
+            >
+          </li>
+          <li>
+            <a
+              href="#king-county"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >King County Metro</a
+            >
+          </li>
+          <li>
+            <a
+              href="#state-ferries"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Washington State Ferries</a
+            >
+          </li>
+          <li>
+            <a
+              href="#national-context"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >National Context</a
+            >
+          </li>
+          <li>
+            <a
+              href="#synthesis"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Synthesis &amp; Trends</a
+            >
+          </li>
+          <li>
+            <a
+              href="#conclusions"
+              class="text-slate-custom hover:text-charcoal transition-colors duration-200 block py-1"
+              >Conclusions</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="border-t pt-4">
+        <p class="text-xs text-slate-500 mb-2">Key Statistics</p>
+        <div class="space-y-2 text-xs">
+          <div class="bg-red-50 p-2 rounded">
+            <span class="font-semibold text-red-800">195%</span>
+            <span class="text-red-600 block"
+              >Sound Transit assault increase (2023)</span
+            >
+          </div>
+          <div class="bg-orange-50 p-2 rounded">
+            <span class="font-semibold text-orange-800">80%</span>
+            <span class="text-orange-600 block"
+              >Transit worker attacks (2024)</span
+            >
+          </div>
+          <div class="bg-green-50 p-2 rounded">
+            <span class="font-semibold text-green-800">56%</span>
+            <span class="text-green-600 block"
+              >Metro operator assault reduction</span
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="relative">
+        <div class="container mx-auto px-6 py-12">
+          <div class="bento-grid">
+            <!-- Main Hero Panel -->
+            <div class="bento-main relative">
+              <img
+                src="https://kimi-web-img.moonshot.cn/img/www.apta.com/de6b2abf9d0b66d2f85957f14fe983aaa3efb815.jpg"
+                alt="Abstract representation of urban transit safety"
+                class="w-full h-full object-cover"
+                size="wallpaper"
+                aspect="wide"
+                query="subway safety abstract"
+                referrerpolicy="no-referrer"
+                data-modified="1"
+                data-score="0.00" />
+              <div
+                class="hero-overlay absolute inset-0 flex items-center justify-center">
+                <div class="text-center text-white px-8">
+                  <h1
+                    class="font-serif text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                    <span class="italic">Navigating</span>
+                    <br />
+                    <span class="font-normal">Transit Safety</span>
+                  </h1>
+                  <p
+                    class="text-xl lg:text-2xl font-light opacity-90 max-w-2xl mx-auto">
+                    A Decade of Assault Trends Across Washington State&#39;s
+                    Public Transportation Systems
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat Panels -->
+            <div class="bento-stat">
+              <div class="text-3xl font-bold text-red-600 mb-2">195%</div>
+              <div class="text-sm text-center text-slate-600">
+                Increase in Sound Transit assaults (2022-2023)
+              </div>
+            </div>
+
+            <div class="bento-stat">
+              <div class="text-3xl font-bold text-orange-600 mb-2">53%</div>
+              <div class="text-sm text-center text-slate-600">
+                Passenger assault spike (2024 YTD)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Executive Summary -->
+      <section id="executive-summary" class="py-16 bg-beige-custom">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Executive Summary
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <p class="text-xl text-slate-700 mb-6 leading-relaxed">
+              Recent data from Washington State&#39;s major transit agencies
+              reveals a
+              <strong
+                >concerning rise in reported assault incidents, particularly in
+                the 2022-2024 period</strong
+              >. This increase is partly attributed to the Federal Transit
+              Administration&#39;s expanded definition of assault, which now
+              includes verbal threats and harassment.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 my-8">
+              <div class="bg-white p-6 rounded-lg border-l-4 border-red-500">
+                <h3 class="font-semibold text-lg mb-3 text-red-800">
+                  Critical Findings
+                </h3>
+                <ul class="space-y-2 text-slate-700">
+                  <li>
+                    Sound Transit: <strong>195% increase</strong> in total
+                    assaults (2022-2023)
+                  </li>
+                  <li>
+                    <strong>80% rise</strong> in attacks on transit workers
+                    (2024 YTD)
+                  </li>
+                  <li>Verbal assaults rose from 122 to 420 incidents</li>
+                  <li>
+                    National transit worker assaults
+                    <strong>tripled since 2008</strong>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg border-l-4 border-blue-500">
+                <h3 class="font-semibold text-lg mb-3 text-blue-800">
+                  Data Limitations
+                </h3>
+                <ul class="space-y-2 text-slate-700">
+                  <li>Fragmented data across agencies</li>
+                  <li>Varying reporting methodologies</li>
+                  <li>Significant gaps in ferry system data</li>
+                  <li>Pre-2022 statistics inconsistent</li>
+                </ul>
+              </div>
+            </div>
+
+            <p class="text-lg text-slate-600">
+              King County Metro experienced fluctuations, with a notable
+              <strong>56% reduction in operator assaults</strong> from 2023 to
+              2024 following targeted safety initiatives, though a fatal
+              stabbing in late 2024 underscored ongoing risks
+              <a
+                href="https://www.seattletimes.com/seattle-news/law-justice/king-county-metro-bus-driver-fatally-stabbed-in-seattles-u-district/"
+                class="citation-link"
+                target="_blank"
+                >[576]</a
+              >
+              <a
+                href="https://kingcountymetro.blog/2025/06/10/king-county-metro-to-install-operator-safety-partitions-fleetwide/"
+                class="citation-link"
+                target="_blank"
+                >[691]</a
+              >.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Data Availability Challenges -->
+      <section id="data-challenges" class="py-16">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Data Availability &amp; Reporting Challenges
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <div class="pull-quote">
+              &#34;A comprehensive analysis of assault incidents across all
+              Washington State transit agencies over the last decade is
+              significantly hampered by the lack of a centralized, publicly
+              accessible database.&#34;
+            </div>
+
+            <p class="text-lg mb-6">
+              The primary challenge stems from the
+              <strong
+                >decentralized nature of transit operations and law
+                enforcement</strong
+              >
+              in Washington State. Each agency maintains its own records, with
+              varying definitions, reporting standards, and timeframes
+              <a
+                href="https://www.transit.dot.gov/ntd/data-product/safety-security-time-series-data"
+                class="citation-link"
+                target="_blank"
+                >[145]</a
+              >.
+            </p>
+
+            <div class="bg-slate-50 p-6 rounded-lg mb-8">
+              <h3 class="font-semibold text-lg mb-4 text-slate-800">
+                Key Challenges Identified
+              </h3>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-medium mb-2 text-slate-700">
+                    Data Fragmentation
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Information comes from disparate sources: agency reports,
+                    news articles, national databases - each with different
+                    methodologies.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-medium mb-2 text-slate-700">
+                    Definition Changes
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    FTA&#39;s expanded assault definition now includes verbal
+                    threats, significantly impacting year-over-year comparisons.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-medium mb-2 text-slate-700">
+                    Reporting Inconsistencies
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Some agencies report annually, others sporadically; some
+                    include minor incidents, others only report severe cases.
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-medium mb-2 text-slate-700">
+                    Ferry System Gaps
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Washington State Ferries data focuses on general injuries,
+                    not specific assault incidents.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-lg">
+              The National Transit Database provides national trends but
+              <strong
+                >does not offer straightforward extraction of Washington
+                State-specific data</strong
+              >
+              for all forms of assault over the decade
+              <a
+                href="https://transweb.sjsu.edu/sites/default/files/2407-Staes-Public-Transit-Assaults-Mental-Health.pdf"
+                class="citation-link"
+                target="_blank"
+                >[524]</a
+              >.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Sound Transit Analysis -->
+      <section id="sound-transit" class="py-16 bg-beige-custom">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Sound Transit: A Case Study in Rising Violence
+          </h2>
+
+          <div class="mb-12">
+            <img
+              src="https://kimi-web-img.moonshot.cn/img/www.soundtransit.org/d9148ed0a437ffb856049419ff3aa67ffb8907b4.png"
+              alt="Sound Transit light rail train at station"
+              class="w-full h-64 object-cover rounded-lg mb-6"
+              size="medium"
+              aspect="wide"
+              style="photo"
+              query="Sound Transit light rail station"
+              referrerpolicy="no-referrer"
+              data-modified="1"
+              data-score="0.00" />
+          </div>
+
+          <div class="prose prose-lg max-w-none">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Dramatic Increases in Reported Assaults
+            </h3>
+
+            <p class="text-lg mb-6">
+              Sound Transit&#39;s data reveals a
+              <strong
+                >staggering 195% increase in overall assaults in 2023 compared
+                to 2022</strong
+              >
+              <a
+                href="https://www.soundtransit.org/sites/default/files/documents/community-oversight-panel-meeting-summary-20240110.pdf"
+                class="citation-link"
+                target="_blank"
+                >[63]</a
+              >. This surge was particularly driven by verbal assaults, which
+              jumped from 122 incidents in 2022 to 420 in 2023.
+            </p>
+
+            <div class="bg-red-50 border border-red-200 p-6 rounded-lg mb-8">
+              <h4 class="font-semibold text-red-800 mb-4">
+                2024 Continued Pressure
+              </h4>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <span class="text-2xl font-bold text-red-600">53%</span>
+                  <p class="text-sm text-red-700">
+                    Year-to-date spike in passenger assaults
+                  </p>
+                </div>
+                <div>
+                  <span class="text-2xl font-bold text-red-600">80%</span>
+                  <p class="text-sm text-red-700">
+                    Rise in attacks on transit workers
+                  </p>
+                </div>
+              </div>
+              <p class="text-sm text-red-600 mt-4">
+                Source:
+                <a
+                  href="https://komonews.com/news/local/sound-transit-systems-security-conditions-assaults-passengers-safety-guards-transportation-infrastructure-administrators-2023-annual-report-september-26"
+                  class="citation-link"
+                  target="_blank"
+                  >KOMO News Safety Report [73]</a
+                >
+              </p>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              High-Profile Incidents
+            </h3>
+
+            <div class="space-y-4 mb-8">
+              <div class="bg-white p-4 rounded border-l-4 border-orange-500">
+                <h4 class="font-semibold text-orange-800">
+                  July 2023 - Othello Station
+                </h4>
+                <p class="text-sm text-slate-600">
+                  Man stabbed 18 times on light rail train
+                </p>
+              </div>
+              <div class="bg-white p-4 rounded border-l-4 border-orange-500">
+                <h4 class="font-semibold text-orange-800">
+                  September 2023 - Beacon Hill
+                </h4>
+                <p class="text-sm text-slate-600">
+                  Hammer attack at Link light rail station
+                </p>
+              </div>
+              <div class="bg-white p-4 rounded border-l-4 border-orange-500">
+                <h4 class="font-semibold text-orange-800">Sodo Station</h4>
+                <p class="text-sm text-slate-600">
+                  Passenger struck in head with large rock
+                </p>
+              </div>
+            </div>
+
+            <p class="text-lg mb-6">
+              These severe incidents, while historically rare, contribute to
+              declining safety perceptions and have prompted increased security
+              measures including
+              <strong
+                >additional police patrols and de-escalation training</strong
+              >
+              <a
+                href="https://www.seattletimes.com/seattle-news/transportation/what-are-seattle-area-transit-agencies-doing-to-protect-riders/"
+                class="citation-link"
+                target="_blank"
+                >[477]</a
+              >.
+            </p>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Impact of Reporting Definition Changes
+            </h3>
+
+            <p class="text-lg mb-6">
+              The FTA&#39;s revised assault definition now explicitly includes
+              verbal assaults, contributing significantly to the observed
+              increases. Sound Transit began
+              <strong
+                >&#34;logging a record of physical and nonphysical assaults on
+                transit workers&#34; in April 2023</strong
+              >, regardless of whether an injury occurred
+              <a
+                href="https://komonews.com/news/local/sound-transit-systems-security-conditions-assaults-passengers-safety-guards-transportation-infrastructure-administrators-2023-annual-report-september-26"
+                class="citation-link"
+                target="_blank"
+                >[461]</a
+              >.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- King County Metro -->
+      <section id="king-county" class="py-16">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            King County Metro: Mixed Signals in Operator Safety
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Historical Context
+            </h3>
+
+            <p class="text-lg mb-6">
+              King County Metro showed a
+              <strong
+                >general decline in operator assaults for the period up to
+                2014</strong
+              >
+              <a
+                href="https://kingcounty.gov/-/media/king-county/depts/metro/documents/about/data-and-reports/2014/metro-2014-strategic-plan-progress-report.pdf"
+                class="citation-link"
+                target="_blank"
+                >[301]</a
+              >, suggesting successful safety initiatives during that era.
+              However, the transition to recent years reveals more complex
+              patterns.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 my-8">
+              <div
+                class="bg-green-50 p-6 rounded-lg border-l-4 border-green-500">
+                <h4 class="font-semibold text-green-800 mb-3">
+                  Positive Developments
+                </h4>
+                <ul class="space-y-2 text-sm text-green-700">
+                  <li>
+                    <strong>56% reduction</strong> in operator assaults
+                    (2023-2024)
+                  </li>
+                  <li>
+                    Further <strong>20% decrease</strong> Q1 2024 to Q1 2025
+                  </li>
+                  <li>
+                    &#34;Care and Presence&#34; safety approach showing results
+                  </li>
+                  <li>Downward trend in incidents since 2023</li>
+                </ul>
+              </div>
+
+              <div class="bg-red-50 p-6 rounded-lg border-l-4 border-red-500">
+                <h4 class="font-semibold text-red-800 mb-3">
+                  Ongoing Challenges
+                </h4>
+                <ul class="space-y-2 text-sm text-red-700">
+                  <li>31 operator assaults reported in 2023</li>
+                  <li>15 assaults through November 2024</li>
+                  <li>Fatal stabbing of operator in December 2024</li>
+                  <li>
+                    Bus became &#34;relatively more dangerous&#34; during COVID
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              The Human Cost
+            </h3>
+
+            <div class="bg-slate-100 p-6 rounded-lg mb-8">
+              <p class="text-lg text-slate-700 italic">
+                &#34;Despite overall improvements, the fatal stabbing of a Metro
+                bus driver in December 2024 underscores the severe risks that
+                operators continue to face daily.&#34;
+              </p>
+              <p class="text-sm text-slate-500 mt-4">
+                Reference:
+                <a
+                  href="https://www.seattletimes.com/seattle-news/law-justice/king-county-metro-bus-driver-fatally-stabbed-in-seattles-u-district/"
+                  class="citation-link"
+                  target="_blank"
+                  >Seattle Times [576]</a
+                >
+              </p>
+            </div>
+
+            <p class="text-lg">
+              The rate of complaints per boarding reportedly
+              <strong>doubled during the pandemic</strong>, supporting driver
+              assertions of a more stressful atmosphere on buses
+              <a
+                href="https://www.theurbanist.org/2024/05/18/metro-continues-to-face-labor-pinch/"
+                class="citation-link"
+                target="_blank"
+                >[689]</a
+              >.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Washington State Ferries -->
+      <section id="state-ferries" class="py-16 bg-beige-custom">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Washington State Ferries: The Data Void
+          </h2>
+
+          <div class="mb-12">
+            <img
+              src="https://kimi-web-img.moonshot.cn/img/media.king5.com/7289fa4ca924b28fbf9e2a7edb135f19612cfce4.jpg"
+              alt="Washington State Ferry vessel sailing"
+              class="w-full h-64 object-cover rounded-lg mb-6"
+              size="medium"
+              aspect="wide"
+              color="blue"
+              style="photo"
+              query="Washington State Ferry"
+              referrerpolicy="no-referrer"
+              data-modified="1"
+              data-score="0.00" />
+          </div>
+
+          <div class="prose prose-lg max-w-none">
+            <div
+              class="bg-yellow-50 border border-yellow-200 p-6 rounded-lg mb-8">
+              <h3 class="font-semibold text-yellow-800 mb-4">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Critical Data Gap
+              </h3>
+              <p class="text-yellow-700">
+                Washington State Ferries, the largest ferry system in the United
+                States, provides safety data primarily in the form of
+                <strong
+                  >injury statistics rather than specific assault data</strong
+                >. This creates a significant blind spot in understanding
+                transit violence across all major Washington transportation
+                systems.
+              </p>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Available Injury Statistics (FY2024)
+            </h3>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-slate-800 mb-4">
+                  Employee Injuries
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-slate-600"
+                      >Total recordable incidents:</span
+                    >
+                    <span class="font-semibold">90</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-600"
+                      >Injury rate (per 10k hours):</span
+                    >
+                    <span class="font-semibold">8.3</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-600">Change from FY2023:</span>
+                    <span class="font-semibold text-green-600">-12%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-semibold text-slate-800 mb-4">
+                  Passenger Injuries
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex justify-between">
+                    <span class="text-slate-600">Total injuries:</span>
+                    <span class="font-semibold">29</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-600"
+                      >Injury rate (per million):</span
+                    >
+                    <span class="font-semibold">1.54</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-slate-600">Change from FY2021 low:</span>
+                    <span class="font-semibold text-red-600">+39%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-lg mb-6">
+              The most common types of employee injuries were pain/soreness (55
+              incidents), bruises/contusions (8 incidents), and hearing loss (7
+              incidents). For passengers,
+              <strong>slips, trips, and falls</strong> accounted for 19 injuries
+              on vessels and 10 in terminals
+              <a
+                href="https://wsdot.wa.gov/sites/default/files/2025-01/FY2024-WSF-Performance-Measures-Report.pdf"
+                class="citation-link"
+                target="_blank"
+                >[333]</a
+              >.
+            </p>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Why Assault Data is Missing
+            </h3>
+
+            <p class="text-lg mb-6">
+              While Washington State law RCW 47.04.250 addresses
+              <strong
+                >&#34;Assaults by motorists on department employees&#34;</strong
+              >
+              during vehicle loading/unloading, this legislation focuses on
+              employee compensation rather than providing comprehensive assault
+              statistics
+              <a
+                href="https://app.leg.wa.gov/rcw/default.aspx?cite=47.04.250"
+                class="citation-link"
+                target="_blank"
+                >[438]</a
+              >.
+            </p>
+
+            <div class="pull-quote">
+              &#34;The absence of specific assault data for WSF means that any
+              analysis of trends in aggression or violence on ferries must rely
+              on anecdotal evidence or general injury statistics, which are not
+              specific enough for this purpose.&#34;
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- National Context -->
+      <section id="national-context" class="py-16">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            National Context: A Widespread Crisis
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Transit Worker Assaults Triple Since 2008
+            </h3>
+
+            <p class="text-lg mb-6">
+              National data from the Federal Transit Administration&#39;s
+              National Transit Database reveals a
+              <strong
+                >120% increase in assaults against transit workers from 2013 to
+                2021</strong
+              >
+              <a
+                href="https://www.transit.dot.gov/ntd"
+                class="citation-link"
+                target="_blank"
+                >[641]</a
+              >. The American Public Transportation Association confirms that
+              assaults on transit workers have
+              <strong>tripled since 2008</strong>
+              <a
+                href="https://www.apta.com/wp-content/uploads/APTA-SS-SEM-RP-020-25.pdf"
+                class="citation-link"
+                target="_blank"
+                >[758]</a
+              >.
+            </p>
+
+            <div class="bg-blue-50 border border-blue-200 p-6 rounded-lg mb-8">
+              <h4 class="font-semibold text-blue-800 mb-4">
+                National Transit Database Changes
+              </h4>
+              <p class="text-blue-700 mb-4">
+                The NTD expanded its reporting requirements for assaults on
+                transit workers beginning April 2023, mandating that
+                <strong
+                  >all transit worker assaults, whether &#34;major&#34; or
+                  &#34;non-major,&#34; be reported</strong
+                >
+                <a
+                  href="https://www.transit.dot.gov/regulations-and-programs/safety/public-transportation-agency-safety-program/national-transit"
+                  class="citation-link"
+                  target="_blank"
+                  >[716]</a
+                >.
+              </p>
+              <p class="text-blue-700">
+                This change aims to provide a more comprehensive picture but
+                also contributes to apparent increases in reported incidents.
+              </p>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              COVID-19 Impact: An Accelerant for Violence
+            </h3>
+
+            <p class="text-lg mb-6">
+              The pandemic period significantly impacted transit assault trends.
+              For King County Metro and Sound Transit combined,
+              <strong
+                >severe injury assaults (requiring ambulance transport) spiked
+                from 9 incidents (2013-2019) to 55 incidents (2020-2022)</strong
+              >
+              <a
+                href="https://www.seattletimes.com/seattle-news/transportation/what-are-seattle-area-transit-agencies-doing-to-protect-riders/"
+                class="citation-link"
+                target="_blank"
+                >[477]</a
+              >.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8 my-8">
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-3">
+                  Pandemic Factors
+                </h4>
+                <ul class="space-y-2 text-slate-600">
+                  <li>• Declining ridership and security presence</li>
+                  <li>• Heightened societal tensions</li>
+                  <li>• Changes in passenger demographics</li>
+                  <li>• Shifts in law enforcement priorities</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-semibold text-slate-800 mb-3">
+                  Post-Pandemic Reality
+                </h4>
+                <ul class="space-y-2 text-slate-600">
+                  <li>• Sharp spike in 2021 following restrictions end</li>
+                  <li>• Bus became &#34;relatively more dangerous&#34;</li>
+                  <li>• Complaint rates doubled during pandemic</li>
+                  <li>• More stressful atmosphere on buses</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Synthesis -->
+      <section id="synthesis" class="py-16 bg-beige-custom">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Synthesis: Connecting the Dots
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Observed Post-Pandemic Increases
+            </h3>
+
+            <p class="text-lg mb-6">
+              The available data from Washington&#39;s major transit agencies
+              indicates a
+              <strong
+                >significant increase in reported assault incidents in the
+                recent post-pandemic period (2022-2024)</strong
+              >. Sound Transit&#39;s 195% increase in 2023 and continued
+              pressure in 2024, combined with the spike in severe assaults
+              across Metro and Sound Transit services, points to a concerning
+              trend.
+            </p>
+
+            <div class="my-8">
+              <div class="mermaid-container">
+                <div class="mermaid-controls">
+                  <button class="mermaid-control-btn zoom-in" title="放大">
+                    <i class="fas fa-search-plus"></i>
+                  </button>
+                  <button class="mermaid-control-btn zoom-out" title="缩小">
+                    <i class="fas fa-search-minus"></i>
+                  </button>
+                  <button class="mermaid-control-btn reset-zoom" title="重置">
+                    <i class="fas fa-expand-arrows-alt"></i>
+                  </button>
+                  <button
+                    class="mermaid-control-btn fullscreen"
+                    title="全屏查看">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <div class="mermaid" id="mermaid-chart">
+                  flowchart TD
+  A["Pre-Pandemic 2013-2019"] --> B["Pandemic 2020-2022"]
+  B --> C["Post-Pandemic 2022-2024"]
+  A --> D["9 Severe Assaults"]
+  B --> E["55 Severe Assaults"]
+  C --> F["195% Increase Sound Transit"]
+  C --> G["53% Spike Passenger Assaults"]
+  C --> H["80% Rise Worker Attacks"]
+  F --> I["Reporting Definition Changes"]
+  G --> J["Enhanced Security Presence"]
+  H --> K["Better Reporting Mechanisms"]
+
+  style A fill:#e8f5e8,stroke:#2d5f2d,stroke-width:2px,color:#1a1a1a
+  style B fill:#fff3cd,stroke:#856404,stroke-width:2px,color:#1a1a1a
+  style C fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#1a1a1a
+  style D fill:#e8f5e8,stroke:#2d5f2d,stroke-width:2px,color:#1a1a1a
+  style E fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#1a1a1a
+  style F fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#1a1a1a
+  style G fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#1a1a1a
+  style H fill:#f8d7da,stroke:#721c24,stroke-width:2px,color:#1a1a1a
+  style I fill:#d1ecf1,stroke:#0c5460,stroke-width:2px,color:#1a1a1a
+  style J fill:#d1ecf1,stroke:#0c5460,stroke-width:2px,color:#1a1a1a
+  style K fill:#d1ecf1,stroke:#0c5460,stroke-width:2px,color:#1a1a1a
+                </div>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              The Reporting Methodology Factor
+            </h3>
+
+            <p class="text-lg mb-6">
+              Reported statistics are
+              <strong
+                >significantly influenced by data collection and reporting
+                methodologies</strong
+              >. The FTA&#39;s revised assault definition now explicitly
+              includes verbal assaults, contributing to a substantial portion of
+              Sound Transit&#39;s 195% increase in 2023.
+            </p>
+
+            <div class="bg-slate-100 p-6 rounded-lg mb-8">
+              <h4 class="font-semibold text-slate-800 mb-3">
+                Methodological Influences
+              </h4>
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h5 class="font-medium text-slate-700 mb-2">
+                    Definition Changes
+                  </h5>
+                  <p class="text-sm text-slate-600">
+                    Verbal assaults, harassment, and non-physical aggression now
+                    included in official counts
+                  </p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-slate-700 mb-2">
+                    Enhanced Reporting
+                  </h5>
+                  <p class="text-sm text-slate-600">
+                    &#34;See something, say something&#34; campaigns and
+                    increased security presence lead to better monitoring
+                  </p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-slate-700 mb-2">
+                    Historical Underreporting
+                  </h5>
+                  <p class="text-sm text-slate-600">
+                    Past data might underrepresent true extent if certain
+                    incident types weren&#39;t systematically captured
+                  </p>
+                </div>
+                <div>
+                  <h5 class="font-medium text-slate-700 mb-2">
+                    NTD Variations
+                  </h5>
+                  <p class="text-sm text-slate-600">
+                    Changes in reporting thresholds and validation procedures
+                    over time create discontinuities
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Persistent Data Gaps
+            </h3>
+
+            <p class="text-lg mb-6">
+              The analysis reveals
+              <strong
+                >substantial data gaps across different transit modes and
+                agencies</strong
+              >. While Sound Transit and King County Metro provide some recent
+              data points, consistent long-term datasets are lacking, and
+              Washington State Ferries data is virtually non-existent for
+              assault-specific analysis.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Conclusions -->
+      <section id="conclusions" class="py-16">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <h2 class="font-serif text-4xl font-bold text-charcoal mb-8">
+            Conclusions &amp; Recommendations
+          </h2>
+
+          <div class="prose prose-lg max-w-none">
+            <div class="bg-slate-50 p-8 rounded-lg mb-8">
+              <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+                Key Findings
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-chart-line text-red-500 mt-1"></i>
+                  <p class="text-slate-700">
+                    <strong>Significant increases</strong> in reported assaults
+                    post-pandemic, particularly on Sound Transit systems
+                  </p>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-file-alt text-blue-500 mt-1`"></i>
+                  <p class="text-slate-700">
+                    <strong>Reporting definition changes</strong> significantly
+                    impact statistics, making year-over-year comparisons
+                    challenging
+                  </p>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-database text-yellow-500 mt-1"></i>
+                  <p class="text-slate-700">
+                    <strong>Data fragmentation and gaps</strong> prevent
+                    comprehensive statewide analysis across all transit modes
+                  </p>
+                </div>
+                <div class="flex items-start space-x-3">
+                  <i class="fas fa-users text-green-500 mt-1"></i>
+                  <p class="text-slate-700">
+                    <strong>National context</strong> shows transit worker
+                    assaults have tripled since 2008, affecting agencies
+                    nationwide
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="font-serif text-2xl font-semibold mb-6 text-charcoal">
+              Recommendations for Future Data Collection
+            </h3>
+
+            <div class="grid md:grid-cols-2 gap-8 my-8">
+              <div class="space-y-6">
+                <div class="bg-white p-6 rounded-lg border-l-4 border-blue-500">
+                  <h4 class="font-semibold text-blue-800 mb-3">
+                    <i class="fas fa-clipboard-list mr-2"></i>
+                    Standardized Reporting
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Advocate for standardized definitions of all assault forms
+                    across all Washington State transit agencies to enable
+                    accurate comparisons and trend analysis.
+                  </p>
+                </div>
+
+                <div
+                  class="bg-white p-6 rounded-lg border-l-4 border-green-500">
+                  <h4 class="font-semibold text-green-800 mb-3">
+                    <i class="fas fa-server mr-2"></i>
+                    Centralized Data Repository
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Establish a centralized, publicly accessible database for
+                    transit safety data with detailed assault statistics
+                    disaggregated by agency, mode, and type.
+                  </p>
+                </div>
+
+                <div
+                  class="bg-white p-6 rounded-lg border-l-4 border-purple-500">
+                  <h4 class="font-semibold text-purple-800 mb-3">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    Consistent Publication
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Mandate regular public reporting of comprehensive assault
+                    data with clear metadata on methodology changes and
+                    consistent timeframes.
+                  </p>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div
+                  class="bg-white p-6 rounded-lg border-l-4 border-orange-500">
+                  <h4 class="font-semibold text-orange-800 mb-3">
+                    <i class="fas fa-ship mr-2"></i>
+                    Ferry System Data
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Implement systematic collection and public reporting of
+                    assault incidents on Washington State Ferries, distinct from
+                    general injury statistics.
+                  </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border-l-4 border-teal-500">
+                  <h4 class="font-semibold text-teal-800 mb-3">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Contextual Information
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Include ridership figures, security measures, and
+                    environmental factors with assault data for more nuanced
+                    analysis and strategy evaluation.
+                  </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border-l-4 border-red-500">
+                  <h4 class="font-semibold text-red-800 mb-3">
+                    <i class="fas fa-search mr-2"></i>
+                    Independent Review
+                  </h4>
+                  <p class="text-sm text-slate-600">
+                    Conduct periodic independent reviews of transit safety data
+                    collection practices to ensure accuracy, completeness, and
+                    transparency.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pull-quote">
+              &#34;By implementing these recommendations, Washington State can
+              develop a more robust understanding of transit safety challenges,
+              enabling data-driven decision-making to protect passengers and
+              transit workers effectively.&#34;
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-charcoal text-warm-white py-12">
+        <div class="container mx-auto px-6 max-w-4xl">
+          <div class="text-center">
+            <p class="text-sm text-slate-300 mb-4">
+              This analysis is based on available public data and official
+              reports from Washington State transit agencies, the Federal
+              Transit Administration, and news sources. Data limitations are
+              noted throughout the report.
+            </p>
+            <p class="text-xs text-slate-400">
+              For the most current information, please consult official agency
+              safety reports and the FTA&#39;s National Transit Database.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // Initialize Mermaid
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        themeVariables: {
+          primaryColor: '#fefefe',
+          primaryTextColor: '#1a1a1a',
+          primaryBorderColor: '#475569',
+          lineColor: '#64748b',
+          secondaryColor: '#f1f5f9',
+          tertiaryColor: '#e2e8f0',
+          background: '#fefefe',
+          mainBkg: '#fefefe',
+          secondaryBkg: '#f1f5f9',
+          tertiaryBkg: '#e2e8f0',
+          // Enhanced contrast settings
+          nodeBorder: '#475569',
+          clusterBkg: '#f8fafc',
+          clusterBorder: '#64748b',
+          defaultLinkColor: '#64748b',
+          titleColor: '#1a1a1a',
+          edgeLabelBackground: '#fefefe',
+          nodeTextColor: '#1a1a1a',
+        },
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+          curve: 'basis',
+          padding: 20,
+        },
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '14px',
+      });
+
+      // Initialize Mermaid Controls for zoom and pan
+      function initializeMermaidControls() {
+        const containers = document.querySelectorAll('.mermaid-container');
+
+        containers.forEach((container) => {
+          const mermaidElement = container.querySelector('.mermaid');
+          let scale = 1;
+          let isDragging = false;
+          let startX,
+            startY,
+            translateX = 0,
+            translateY = 0;
+
+          // 触摸相关状态
+          let isTouch = false;
+          let touchStartTime = 0;
+          let initialDistance = 0;
+          let initialScale = 1;
+          let isPinching = false;
+
+          // Zoom controls
+          const zoomInBtn = container.querySelector('.zoom-in');
+          const zoomOutBtn = container.querySelector('.zoom-out');
+          const resetBtn = container.querySelector('.reset-zoom');
+          const fullscreenBtn = container.querySelector('.fullscreen');
+
+          function updateTransform() {
+            mermaidElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+            if (scale > 1) {
+              container.classList.add('zoomed');
+            } else {
+              container.classList.remove('zoomed');
+            }
+
+            mermaidElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+          }
+
+          if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => {
+              scale = Math.min(scale * 1.25, 4);
+              updateTransform();
+            });
+          }
+
+          if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => {
+              scale = Math.max(scale / 1.25, 0.3);
+              if (scale <= 1) {
+                translateX = 0;
+                translateY = 0;
+              }
+              updateTransform();
+            });
+          }
+
+          if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+              scale = 1;
+              translateX = 0;
+              translateY = 0;
+              updateTransform();
+            });
+          }
+
+          if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+              if (container.requestFullscreen) {
+                container.requestFullscreen();
+              } else if (container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
+              } else if (container.msRequestFullscreen) {
+                container.msRequestFullscreen();
+              }
+            });
+          }
+
+          // Mouse Events
+          mermaidElement.addEventListener('mousedown', (e) => {
+            if (isTouch) return; // 如果是触摸设备，忽略鼠标事件
+
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            mermaidElement.style.cursor = 'grabbing';
+            updateTransform();
+            e.preventDefault();
+          });
+
+          document.addEventListener('mousemove', (e) => {
+            if (isDragging && !isTouch) {
+              translateX = e.clientX - startX;
+              translateY = e.clientY - startY;
+              updateTransform();
+            }
+          });
+
+          document.addEventListener('mouseup', () => {
+            if (isDragging && !isTouch) {
+              isDragging = false;
+              mermaidElement.style.cursor = 'grab';
+              updateTransform();
+            }
+          });
+
+          document.addEventListener('mouseleave', () => {
+            if (isDragging && !isTouch) {
+              isDragging = false;
+              mermaidElement.style.cursor = 'grab';
+              updateTransform();
+            }
+          });
+
+          // 获取两点之间的距离
+          function getTouchDistance(touch1, touch2) {
+            return Math.hypot(
+              touch2.clientX - touch1.clientX,
+              touch2.clientY - touch1.clientY
+            );
+          }
+
+          // Touch Events - 触摸事件处理
+          mermaidElement.addEventListener(
+            'touchstart',
+            (e) => {
+              isTouch = true;
+              touchStartTime = Date.now();
+
+              if (e.touches.length === 1) {
+                // 单指拖动
+                isPinching = false;
+                isDragging = true;
+
+                const touch = e.touches[0];
+                startX = touch.clientX - translateX;
+                startY = touch.clientY - translateY;
+              } else if (e.touches.length === 2) {
+                // 双指缩放
+                isPinching = true;
+                isDragging = false;
+
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                initialDistance = getTouchDistance(touch1, touch2);
+                initialScale = scale;
+              }
+
+              e.preventDefault();
+            },
+            { passive: false }
+          );
+
+          mermaidElement.addEventListener(
+            'touchmove',
+            (e) => {
+              if (e.touches.length === 1 && isDragging && !isPinching) {
+                // 单指拖动
+                const touch = e.touches[0];
+                translateX = touch.clientX - startX;
+                translateY = touch.clientY - startY;
+                updateTransform();
+              } else if (e.touches.length === 2 && isPinching) {
+                // 双指缩放
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = getTouchDistance(touch1, touch2);
+
+                if (initialDistance > 0) {
+                  const newScale = Math.min(
+                    Math.max(
+                      initialScale * (currentDistance / initialDistance),
+                      0.3
+                    ),
+                    4
+                  );
+                  scale = newScale;
+                  updateTransform();
+                }
+              }
+
+              e.preventDefault();
+            },
+            { passive: false }
+          );
+
+          mermaidElement.addEventListener('touchend', (e) => {
+            // 重置状态
+            if (e.touches.length === 0) {
+              isDragging = false;
+              isPinching = false;
+              initialDistance = 0;
+
+              // 延迟重置isTouch，避免鼠标事件立即触发
+              setTimeout(() => {
+                isTouch = false;
+              }, 100);
+            } else if (e.touches.length === 1 && isPinching) {
+              // 从双指变为单指，切换为拖动模式
+              isPinching = false;
+              isDragging = true;
+
+              const touch = e.touches[0];
+              startX = touch.clientX - translateX;
+              startY = touch.clientY - translateY;
+            }
+
+            updateTransform();
+          });
+
+          mermaidElement.addEventListener('touchcancel', (e) => {
+            isDragging = false;
+            isPinching = false;
+            initialDistance = 0;
+
+            setTimeout(() => {
+              isTouch = false;
+            }, 100);
+
+            updateTransform();
+          });
+
+          // Enhanced wheel zoom with better center point handling
+          container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const rect = container.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.min(Math.max(scale * delta, 0.3), 4);
+
+            // Adjust translation to zoom towards center
+            if (newScale !== scale) {
+              const scaleDiff = newScale / scale;
+              translateX = translateX * scaleDiff;
+              translateY = translateY * scaleDiff;
+              scale = newScale;
+
+              if (scale <= 1) {
+                translateX = 0;
+                translateY = 0;
+              }
+
+              updateTransform();
+            }
+          });
+
+          // Initialize display
+          updateTransform();
+        });
+      }
+
+      // Initialize the mermaid controls when the DOM is loaded
+      document.addEventListener('DOMContentLoaded', function () {
+        initializeMermaidControls();
+      });
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }
+        });
+      });
+
+      // Mobile menu toggle (if needed)
+      const mobileMenuToggle = document.createElement('button');
+      mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+      mobileMenuToggle.className =
+        'fixed top-4 left-4 z-50 bg-white p-2 rounded shadow-lg lg:hidden';
+      mobileMenuToggle.addEventListener('click', () => {
+        document.querySelector('.toc-fixed').classList.toggle('open');
+      });
+      document.body.appendChild(mobileMenuToggle);
+
+      // Close TOC when clicking outside on mobile
+      document.addEventListener('click', function (event) {
+        const toc = document.querySelector('.toc-fixed');
+        const isClickInsideToc = toc.contains(event.target);
+        const isClickOnHamburger = mobileMenuToggle.contains(event.target);
+
+        if (
+          window.innerWidth <= 1024 &&
+          toc.classList.contains('open') &&
+          !isClickInsideToc &&
+          !isClickOnHamburger
+        ) {
+          toc.classList.remove('open');
+        }
+      });
+
+      // Highlight active section in TOC
+      const observerOptions = {
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute('id');
+          const tocLink = document.querySelector(`a[href="#${id}"]`);
+          if (tocLink) {
+            if (entry.isIntersecting) {
+              document.querySelectorAll('.toc-fixed a').forEach((link) => {
+                link.classList.remove('text-charcoal', 'font-semibold');
+                link.classList.add('text-slate-custom');
+              });
+              tocLink.classList.remove('text-slate-custom');
+              tocLink.classList.add('text-charcoal', 'font-semibold');
+            }
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections
+      document.querySelectorAll('section[id]').forEach((section) => {
+        observer.observe(section);
+      });
+    </script>
+  </body>
+</html>
